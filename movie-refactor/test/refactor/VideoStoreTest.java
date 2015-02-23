@@ -1,107 +1,71 @@
 package refactor;
 
-import static org.junit.Assert.assertEquals;
+import junit.framework.TestCase;
 
-import org.junit.Before;
-import org.junit.Test;
+public class VideoStoreTest extends TestCase {
+	private RentalStatement statement;
+	private Movie newRelease1;
+	private Movie newRelease2;
+	private Movie childrens;
+	private Movie regular1;
+	private Movie regular2;
+	private Movie regular3;
 
-public class VideoStoreTest
-{
-	
-	private static final String REGULAR_MOVIE3 = "Eraserhead";
-	private static final String REGULAR_MOVIE2 = "8 1/2";
-	private static final String REGULAR_MOVIE1 = "Plan 9 from Outer Space";
-	private static final String MOVIE_TITLE2 = "The Tigger Movie";
-	private static final String MOVIE_TITLE1 = "The Cell";
-	private static final String CUSTOMER_NAME = "Fred";
-	private static final String NEW_LINE = "\n";
-	private static final String TAB = "\t";
-	private Customer customer;
-	@Before
-	public void setUp ()  {
-		customer = new Customer (CUSTOMER_NAME);
-	}
-	
-	@Test
-	public void calculatesAccountForSingleMovie () {
-		addMovieRentalToCustomer( Movie.NEW_RELEASE, MOVIE_TITLE1, 3);
-		
-		customer.createStatement();
-		
-		assertEquals((Double) 9.0, customer.getOwed());
-		assertEquals(2, customer.getPointsEarned());
+	public VideoStoreTest(String name) {
+		super(name);
 	}
 
-
-	@Test
-	public void calculatesAccountForMultipleNewRelease () {
-		addMovieRentalToCustomer(Movie.NEW_RELEASE, MOVIE_TITLE1, 3);
-		addMovieRentalToCustomer(Movie.NEW_RELEASE, MOVIE_TITLE2, 3);
-
-		customer.createStatement ();
-		
-		assertEquals((Double) 18.0, customer.getOwed());
-		assertEquals(4, customer.getPointsEarned());
-
+	protected void setUp() {
+		statement = new RentalStatement("Customer Name");
+		newRelease1 = new NewReleaseMovie("New Release 1");
+		newRelease2 = new NewReleaseMovie("New Release 2");
+		childrens = new ChildrensMovie("Childrens");
+		regular1 = new RegularMovie("Regular 1");
+		regular2 = new RegularMovie("Regular 2");
+		regular3 = new RegularMovie("Regular 3");
 	}
 
-	@Test
-	public void calculatesAccountForChildrensMovie () {
-		addMovieRentalToCustomer(Movie.CHILDRENS, MOVIE_TITLE2, 3);
-		
-		customer.createStatement ();
-		
-		assertEquals((Double) 1.5, customer.getOwed());
-		assertEquals(1, customer.getPointsEarned());
-	}
-	
-	@Test
-	public void calculatesAccountForMultipleRegularMovies () {
-		addMovieRentalToCustomer(Movie.REGULAR,	REGULAR_MOVIE1, 1);
-		addMovieRentalToCustomer(Movie.REGULAR,	REGULAR_MOVIE2, 2);
-		addMovieRentalToCustomer(Movie.REGULAR,	REGULAR_MOVIE3, 3);
-
-		customer.createStatement ();
-		
-		assertEquals((Double) 7.5, customer.getOwed());
-		assertEquals(3, customer.getPointsEarned());
-	}
-	
-	@Test
-	public void formatsStatement() {
-		addMovieRentalToCustomer(Movie.REGULAR,	REGULAR_MOVIE1, 1);
-		addMovieRentalToCustomer(Movie.REGULAR,	REGULAR_MOVIE2, 2);
-		addMovieRentalToCustomer(Movie.REGULAR,	REGULAR_MOVIE3, 3);
-
-		String statement = customer.createStatement ();
-
-		assertEquals ("Rental Record for Fred" +
-				NEW_LINE +
-				TAB +
-				REGULAR_MOVIE1 +
-				TAB +
-				"2.0" +
-				NEW_LINE +
-				TAB +
-				REGULAR_MOVIE2 +
-				TAB +
-				"2.0" +
-				NEW_LINE +
-				TAB +
-				REGULAR_MOVIE3 +
-				TAB +
-				"3.5" +
-				NEW_LINE +
-				"You owed 7.5" +
-				NEW_LINE +
-				"You earned 3 frequent renter points" +
-				NEW_LINE, 
-				statement);
+	private void assertAmountAndPointsForReport(double expectedAmount,
+			int expectedPoints) {
+		assertEquals(expectedAmount, statement.getAmountOwed());
+		assertEquals(expectedPoints, statement.getFrequentRenterPoints());
 	}
 
-	private void addMovieRentalToCustomer(int movieType, String movieTitle, int daysRented) {
-		customer.addRental (new Rental (new Movie (movieTitle, movieType), daysRented));
+	public void testSingleNewReleaseStatement() {
+		statement.addRental(new Rental(newRelease1, 3));
+		statement.makeRentalStatement();
+		assertAmountAndPointsForReport(9.0, 2);
 	}
-	
 
+	public void testDualNewReleaseStatement() {
+		statement.addRental(new Rental(newRelease1, 3));
+		statement.addRental(new Rental(newRelease2, 3));
+		statement.makeRentalStatement();
+		assertAmountAndPointsForReport(18.0, 4);
+	}
+
+	public void testSingleChildrensStatement() {
+		statement.addRental(new Rental(childrens, 3));
+		statement.makeRentalStatement();
+		assertAmountAndPointsForReport(1.5, 1);
+	}
+
+	public void testMultipleRegularStatement() {
+		statement.addRental(new Rental(regular1, 1));
+		statement.addRental(new Rental(regular2, 2));
+		statement.addRental(new Rental(regular3, 3));
+		statement.makeRentalStatement();
+		assertAmountAndPointsForReport(7.5, 3);
+	}
+
+	public void testRentalStatementFormat() {
+		statement.addRental(new Rental(regular1, 1));
+		statement.addRental(new Rental(regular2, 2));
+		statement.addRental(new Rental(regular3, 3));
+
+		assertEquals("Rental Record for Customer Name\n" + "\tRegular 1\t2.0\n"
+				+ "\tRegular 2\t2.0\n" + "\tRegular 3\t3.5\n"
+				+ "You owed 7.5\n" + "You earned 3 frequent renter points\n",
+				statement.makeRentalStatement());
+	}
 }
