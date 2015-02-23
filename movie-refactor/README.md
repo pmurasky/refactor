@@ -1,2 +1,1 @@
-# refactor
 Movie rental refactor
