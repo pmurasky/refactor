@@ -42,7 +42,7 @@ public class Customer {
 
 	private String createLineItem(Rental rental) {
 		StringBuilder lineItem = new StringBuilder();
-		double thisAmount = rental.amount();
+		double thisAmount = rental.getMovie().calculateRentalFee(rental.getDaysRented());
 
 		calculateFrequentRenterPoints(rental);
 
@@ -56,7 +56,7 @@ public class Customer {
 	private void calculateFrequentRenterPoints(Rental rental) {
 		frequentRenterPoints++;
 
-		if (rental.getMovie().getPriceCode() == Movie.NEW_RELEASE
+		if (rental.getMovie().getPriceCode() == PriceCode.NEW_RELEASE
 				&& rental.getDaysRented() > 1)
 			frequentRenterPoints++;
 	}
