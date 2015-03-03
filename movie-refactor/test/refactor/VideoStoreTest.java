@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class VideoStoreTest {
-
 	private static final String REGULAR_MOVIE3 = "Eraserhead";
 	private static final String REGULAR_MOVIE2 = "8 1/2";
 	private static final String REGULAR_MOVIE1 = "Plan 9 from Outer Space";
@@ -17,6 +16,7 @@ public class VideoStoreTest {
 	private static final String CUSTOMER_NAME = "Fred";
 	private static final String NEW_LINE = "\n";
 	private static final String TAB = "\t";
+	
 	private Customer customer;
 
 	@Before
@@ -69,6 +69,14 @@ public class VideoStoreTest {
 	}
 
 	@Test
+	public void childrensRentalsThatAreLateAreChargedOneFiftyPerLateDay() {
+		addMovieRentalToCustomer(Movie.CHILDRENS, MOVIE_TITLE2, 4);
+		customer.createStatement();
+		Double charge = customer.getOwed();
+		assertThat(charge, is(3.0d));
+	}
+
+	@Test
 	public void formatsStatement() {
 		addMovieRentalToCustomer(Movie.REGULAR, REGULAR_MOVIE1, 1);
 		addMovieRentalToCustomer(Movie.REGULAR, REGULAR_MOVIE2, 2);
@@ -88,13 +96,4 @@ public class VideoStoreTest {
 		customer.addRental(new Rental(new Movie(movieTitle, movieType),
 				daysRented));
 	}
-
-	@Test
-	public void childrensRentalsThatAreLateAreChargedOneFiftyPerLateDay() {
-		addMovieRentalToCustomer(Movie.CHILDRENS, MOVIE_TITLE2, 4);
-		customer.createStatement();
-		Double charge = customer.getOwed();
-		assertThat(charge, is(3.0d));
-	}
-
 }
