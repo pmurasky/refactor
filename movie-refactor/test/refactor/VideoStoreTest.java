@@ -28,7 +28,7 @@ public class VideoStoreTest {
 	public void calculatesAccountForSingleMovie() {
 		addMovieRentalToCustomer(PriceCode.NEW_RELEASE, MOVIE_TITLE1, 3);
 
-		customer.createStatement();
+		new Statement(customer).createStatement();
 
 		assertEquals((Double) 9.0, customer.getOwed());
 		assertEquals(2, customer.getPointsEarned());
@@ -39,7 +39,7 @@ public class VideoStoreTest {
 		addMovieRentalToCustomer(PriceCode.NEW_RELEASE, MOVIE_TITLE1, 3);
 		addMovieRentalToCustomer(PriceCode.NEW_RELEASE, MOVIE_TITLE2, 3);
 
-		customer.createStatement();
+		new Statement(customer).createStatement();
 
 		assertEquals((Double) 18.0, customer.getOwed());
 		assertEquals(4, customer.getPointsEarned());
@@ -50,7 +50,7 @@ public class VideoStoreTest {
 	public void calculatesAccountForChildrensMovie() {
 		addMovieRentalToCustomer(PriceCode.CHILDRENS, MOVIE_TITLE2, 3);
 
-		customer.createStatement();
+		new Statement(customer).createStatement();
 
 		assertEquals((Double) 1.5, customer.getOwed());
 		assertEquals(1, customer.getPointsEarned());
@@ -62,7 +62,7 @@ public class VideoStoreTest {
 		addMovieRentalToCustomer(PriceCode.REGULAR, REGULAR_MOVIE2, 2);
 		addMovieRentalToCustomer(PriceCode.REGULAR, REGULAR_MOVIE3, 3);
 
-		customer.createStatement();
+		new Statement(customer).createStatement();
 
 		assertEquals((Double) 7.5, customer.getOwed());
 		assertEquals(3, customer.getPointsEarned());
@@ -71,7 +71,7 @@ public class VideoStoreTest {
 	@Test
 	public void childrensRentalsThatAreLateAreChargedOneFiftyPerLateDay() {
 		addMovieRentalToCustomer(PriceCode.CHILDRENS, MOVIE_TITLE2, 4);
-		customer.createStatement();
+		new Statement(customer).createStatement();
 		Double charge = customer.getOwed();
 		assertThat(charge, is(3.0d));
 	}
@@ -82,7 +82,7 @@ public class VideoStoreTest {
 		addMovieRentalToCustomer(PriceCode.REGULAR, REGULAR_MOVIE2, 2);
 		addMovieRentalToCustomer(PriceCode.REGULAR, REGULAR_MOVIE3, 3);
 
-		String statement = customer.createStatement();
+		String statement = new Statement(customer).createStatement();
 
 		assertEquals("Rental Record for Fred" + NEW_LINE + TAB + REGULAR_MOVIE1
 				+ TAB + "2.0" + NEW_LINE + TAB + REGULAR_MOVIE2 + TAB + "2.0"

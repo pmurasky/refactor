@@ -34,7 +34,6 @@ public class PriceCode {
 			break;
 		}
 	}
-
 	
 	public int getPriceCode() {
 		return priceCode;

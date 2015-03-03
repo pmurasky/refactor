@@ -1,11 +1,11 @@
 package refactor;
 
 public class Rental {
-	private PriceCode movie;
+	private PriceCode priceCode;
 	private int daysRented;
 
-	public Rental(PriceCode movie, int daysRented) {
-		this.movie = movie;
+	public Rental(PriceCode priceCode, int daysRented) {
+		this.priceCode = priceCode;
 		this.daysRented = daysRented;
 	}
 
@@ -14,6 +14,6 @@ public class Rental {
 	}
 
 	public PriceCode getMovie() {
-		return movie;
+		return priceCode;
 	}
 }
