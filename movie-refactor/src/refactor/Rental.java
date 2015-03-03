@@ -19,15 +19,7 @@ public class Rental {
 	
 
 	class Calculator {
-		double baseAmount;
-		int daysLate;
-		double lateFee;
-		Calculator(double ba, int dl, double lf) {
-			baseAmount = ba;
-			daysLate = dl;
-			lateFee = lf;
-		}
-		public double doIt(int daysRented) {
+		public double calculateRentalFee(double baseAmount, int daysLate, double lateFee, int daysRented) {
 			double thisAmount = baseAmount;
 			if (daysRented > daysLate)
 				thisAmount += (daysRented - daysLate) * lateFee;
@@ -40,20 +32,13 @@ public class Rental {
 		
 		switch (getMovie().getPriceCode()) {
 		case Movie.REGULAR:
-			thisAmount = new Calculator(2,2,lateFee).doIt(getDaysRented());
-//			thisAmount += 2;
-//			if (getDaysRented() > 2)
-//				thisAmount += (getDaysRented() - 2) * lateFee;
+			thisAmount = new Calculator().calculateRentalFee(2,2,lateFee, getDaysRented());
 			break;
 		case Movie.NEW_RELEASE:
-			thisAmount = new Calculator(0, 0, 3).doIt(getDaysRented());
-//			thisAmount += getDaysRented() * 3;
+			thisAmount = new Calculator().calculateRentalFee(0, 0, 3,getDaysRented());
 			break;
 		case Movie.CHILDRENS:
-			thisAmount = new Calculator(1.5, 3, lateFee).doIt(getDaysRented());
-//			thisAmount += 1.5;
-//			if (getDaysRented() > 3)
-//				thisAmount += (getDaysRented() - 3) * lateFee;
+			thisAmount = new Calculator().calculateRentalFee(1.5, 3, lateFee, getDaysRented());
 			break;
 		}
 		return thisAmount;
