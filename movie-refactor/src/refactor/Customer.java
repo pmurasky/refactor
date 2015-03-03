@@ -42,7 +42,7 @@ public class Customer {
 
 	private String createLineItem(Rental rental) {
 		StringBuilder lineItem = new StringBuilder();
-		double thisAmount = rental.determineAmountForRental();
+		double thisAmount = rental.amount();
 
 		calculateFrequentRenterPoints(rental);
 
